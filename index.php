@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $statement->execute($data);
         
         if ($result) {
-            header('Location: statements.php');
+            header('Location: autho.php');
             exit();
         }
     } catch(PDOException $e) {
@@ -239,7 +239,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form method="POST" class="auth-form">
             <h2 class="text-center mb-2">Регистрация</h2>
             
-            <!-- Вывод ошибок -->
             <?php if(isset($e)): ?>
             <div class="error-message"><?= $e->getMessage() ?></div>
             <?php endif; ?>
@@ -247,8 +246,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label>ФИО</label>
                 <input type="text" class="form-control" name="FCS" required 
-                       placeholder="Иванов Иван Иванович">
+                    pattern="^[А-Яа-яЁё\s\-]{2,}$"
+                    title="Только русские буквы, пробелы и дефисы"
+                    placeholder="Иванов Иван Иванович"
+                    oninput="this.setCustomValidity('')"
+                    oninvalid="this.setCustomValidity('Используйте только русские буквы, пробелы и дефисы')">
             </div>
+
 
             <div class="form-group">
                 <label>Логин</label>

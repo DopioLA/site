@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// Проверка авторизации администратора
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: login_form.php");
+    exit();
+}
+
 // Обработка изменения статуса
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['statement_id'])) {
     try {
@@ -10,7 +16,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['statement_id'])) {
         $statement_id = $_POST['statement_id'];
         $new_status = $_POST['status'];
         
-        $sql = "UPDATE statements SET status = :status WHERE id = :id";
+        $sql = "SELECT 
+                    s.id,
+                    s.carNumber,
+                    s.description,
+                    s.status,
+                    s.created_at,
+                    u.FCS AS user_fcs
+                FROM statements s
+                INNER JOIN users u ON s.user_id = u.id";
+
         $stmt = $connection->prepare($sql);
         $stmt->execute([':status' => $new_status, ':id' => $statement_id]);
         
@@ -43,6 +58,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['statement_id'])) {
                         <a class="nav-link active" href="stm_DB.php">Заявления</a>
                     </li>
                 </ul>
+                <div class="d-flex">
+                    <span class="navbar-text text-white me-3">
+                        Вы вошли как: <?= htmlspecialchars($_SESSION['username']) ?>
+                    </span>
+                    <a href="logout.php" class="btn btn-danger">Выйти</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -60,38 +81,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['statement_id'])) {
             $result = $connection->query($sql);
 
             if ($result && $result->rowCount() > 0) {
-                foreach ($result as $row) {
         ?>
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <form method="POST">
-                                <input type="hidden" name="statement_id" value="<?= htmlspecialchars($row['id']) ?>">
-                                
-                                <h5 class="card-title">
-                                    Номер автомобиля: <?= htmlspecialchars($row['carNumber']) ?>
-                                </h5>
-                                
-                                <p class="card-text">
-                                    <?= htmlspecialchars($row['description']) ?>
-                                </p>
-                                
-                                <div class="mb-3">
-                                    <label class="form-label">Статус:</label>
-                                    <select name="status" class="form-select">
+                <table class="table table-striped table-bordered">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Номер автомобиля</th>
+                            <th>Описание</th>
+                            <th>Статус</th>
+                            <th>ФИО заявителя</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($result as $row): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['id']) ?></td>
+                            <td><?= htmlspecialchars($row['carNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['description']) ?></td>
+                            <td>
+                                <form method="POST" class="d-inline">
+                                    <input type="hidden" name="statement_id" value="<?= htmlspecialchars($row['id']) ?>">
+                                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                                         <option value="new" <?= $row['status'] == 'new' ? 'selected' : '' ?>>Новое</option>
                                         <option value="confirmed" <?= $row['status'] == 'confirmed' ? 'selected' : '' ?>>Подтверждено</option>
                                         <option value="rejected" <?= $row['status'] == 'rejected' ? 'selected' : '' ?>>Отклонено</option>
                                     </select>
-                                </div>
-                                
-                                <button type="submit" class="btn btn-primary">Обновить статус</button>
-                            </form>
-                        </div>
-                    </div>
+                                </form>
+                            </td>
+                             <td><?= htmlspecialchars($row['user_fcs'] ?? 'N/A') ?></td>
+                            <td>
+                                <form method="POST">
+                                    <input type="hidden" name="statement_id" value="<?= htmlspecialchars($row['id']) ?>">
+                                    <button type="submit" class="btn btn-sm btn-primary">Обновить</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
         <?php 
-                }
             } else {
-                echo "<p>Заявления не найдены</p>";
+                echo "<div class='alert alert-info'>Заявления не найдены</div>";
             }
         } catch (PDOException $e) {
             echo "<div class='alert alert-danger'>Ошибка подключения: ".htmlspecialchars($e->getMessage())."</div>";

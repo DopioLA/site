@@ -4,44 +4,109 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мои заявки</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <script src="js/bootstrap.bundle.min.js" defer></script>
     <style>
-        .violation-card {
-            margin: 1rem 0;
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            background: #fff;
+        body {
+            background-color: #f8f9fa;
         }
+        
+        .violation-card {
+            margin: 1.5rem 0;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            background: #fff;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 4px solid transparent;
+        }
+        
+        .violation-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
         .status-badge {
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
+            padding: 0.5rem 1.25rem;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .status-badge::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.8);
+        }
+        
+        .status-new { 
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            color: white; 
+        }
+        
+        .status-confirmed { 
+            background: linear-gradient(135deg, #34d399, #10b981);
+            color: white; 
+        }
+        
+        .status-rejected { 
+            background: linear-gradient(135deg, #f87171, #ef4444);
+            color: white; 
+        }
+        
+        .divider {
+            border-top: 1px solid #e5e7eb;
+            margin: 1rem 0;
+        }
+        
+        .container h2 {
+            font-weight: 600;
+            color: #1f2937;
+            padding-bottom: 0.75rem;
+            position: relative;
+        }
+        
+        .container h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
+        
+        .car-number {
+            font-size: 1.25rem;
+            color: #1f2937;
             font-weight: 500;
         }
-        .status-new { background: #ffd700; color: #000; }
-        .status-confirmed { background: #90EE90; color: #006400; }
-        .status-rejected { background: #ffcccb; color: #8b0000; }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark shadow-sm">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="img/car.jpg" alt="Logo" width="75" height="75">
-                Нарушениям.Нет
+            <a class="navbar-brand d-flex align-items-center" href="statements.php">
+                <img src="img/car.jpg" alt="Logo" width="75" height="75" class="me-2 rounded-circle">
+                <span class="fs-4">Нарушениям.Нет</span>
             </a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="statements.php">Мои заявки</a>
+                        <a class="nav-link active" href="application.php">Мои заявки</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container py-4">
+    <div class="container py-5">
         <?php
         session_start();
         

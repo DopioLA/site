@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Обработка отправки формы
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $login = $_POST["login"] ?? '';
     $password = $_POST["password"] ?? '';
@@ -10,7 +9,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $connection = new PDO("mysql:host=MySQL-8.0;dbname=demka_db", "root", "");
         $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Подготовка запроса
         $sql = "SELECT * FROM users WHERE login = :login";
         $statement = $connection->prepare($sql);
         $statement->bindParam(':login', $login);
@@ -21,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($user && $password === $user['password']) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_login'] = $user['login'];
-            header("Location: application.php");
+            header("Location: statements.php");
             exit();
         } else {
             $_SESSION['error'] = "Неверный логин или пароль";
@@ -34,7 +32,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 } else {
-    // Показать форму авторизации
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -150,10 +147,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
     <div class="auth-card">
-        <?php if(isset($_SESSION['error'])): ?>
-            <div class="error"><?= htmlspecialchars($_SESSION['error']) ?></div>
-            <?php unset($_SESSION['error']); ?>
-        <?php endif; ?>
 
         <form method="POST">
             <h2 class="text-center mb-2">Авторизация</h2>

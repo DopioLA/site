@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <title>Форма Заявления</title>
 
     <style>
@@ -236,6 +237,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 </head>
 <body>
+        <nav class="navbar navbar-expand-lg bg-dark navbar-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="statements.php">
+                <img src="img/car.jpg" alt="Logo" width="75" height="75" class="me-2 rounded-circle">
+                <span class="fs-4">Нарушениям.Нет</span>
+            </a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="application.php">Мои заявки</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+
     <div class="header">
         <nav class="nav container">
             <div class="logo">Нарушениям.Нет</div>
