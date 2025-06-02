@@ -34,167 +34,253 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Регистрация</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --background: #f8fafc;
-            --text: #1e293b;
-            --border: #cbd5e1;
-        }
+<style>
+    :root {
+        /* Цветовая палитра */
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --primary-light: #dbeafe;
+        --background: #f8fafc;
+        --surface: #ffffff;
+        --text: #1e293b;
+        --text-secondary: #64748b;
+        --border: #cbd5e1;
+        --border-hover: #94a3b8;
+        --error: #dc2626;
+        --success: #16a34a;
+        
+        /* Тени */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        
+        /* Радиусы */
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 1rem;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    }
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--background);
-            padding: 1rem;
-        }
+    body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.5;
+    }
 
-        .registration-card {
-            background: white;
-            padding: 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 480px;
-        }
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: var(--surface);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-lg);
+        width: 100%;
+        border: 1px solid var(--border);
+    }
 
+    h1, h2 {
+        color: var(--text);
+        margin-bottom: 2rem;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        text-align: center;
+        font-weight: 700;
+    }
+
+    h1::after {
+        content: '';
+        position: absolute;
+        bottom: -0.75rem;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(to right, var(--primary), var(--primary-hover));
+        border-radius: 2px;
+    }
+
+    h2 {
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Группы форм */
+    .form-group {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    .form-label {
+        display: block;
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-label.required::after {
+        content: ' *';
+        color: var(--error);
+    }
+
+    /* Поля ввода */
+    input, textarea, .form-control {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background-color: var(--background);
+    }
+
+    input:hover, textarea:hover, .form-control:hover {
+        border-color: var(--border-hover);
+    }
+
+    input:focus, textarea:focus, .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+        background-color: var(--surface);
+    }
+
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    /* Кнопки */
+    button, .registration-btn {
+        width: 100%;
+        padding: 1rem;
+        background: linear-gradient(to right, var(--primary), var(--primary-hover));
+        color: white;
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 0.5rem;
+    }
+
+    button:hover, .registration-btn:hover {
+        background: linear-gradient(to right, var(--primary-hover), #1e40af);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* Ссылки */
+    .auth-link, .registration-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: var(--text-secondary);
+    }
+
+    .auth-link a, .registration-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .auth-link a:hover, .registration-link:hover {
+        color: var(--primary-hover);
+        text-decoration: underline;
+    }
+
+    /* Сообщения об ошибках */
+    .error, .error-message, .alert-error {
+        color: var(--error);
+        background-color: rgba(220, 38, 38, 0.1);
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin: 1rem 0;
+        font-size: 0.95rem;
+    }
+
+    .success, .alert-success {
+        background-color: rgba(22, 163, 74, 0.1);
+        border: 1px solid rgba(22, 163, 74, 0.2);
+        color: var(--success);
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin: 1rem 0;
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .container {
+            margin: 1rem;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+        }
+        
         h1 {
-            color: var(--text);
-            font-size: 1.875rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            text-align: center;
+            font-size: 2rem;
         }
-
-        .form-group {
-            margin-bottom: 1.5rem;
+        
+        h2 {
+            font-size: 1.5rem;
         }
+    }
 
-        label {
-            display: block;
-            color: var(--text);
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
+    /* Дополнительные элементы */
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 38px;
+        cursor: pointer;
+        color: var(--text-secondary);
+        background: none;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-        input {
-            width: 100%;
-            padding: 0.875rem;
-            border: 1px solid var(--border);
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            transition: all 0.2s ease;
-        }
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: var(--text-secondary);
+        font-size: 0.875rem;
+    }
 
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-        }
+    .divider::before,
+    .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--border);
+    }
 
-        button {
-            width: 100%;
-            padding: 1rem;
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
+    .divider::before {
+        margin-right: 1rem;
+    }
 
-        button:hover {
-            background-color: var(--primary-hover);
-        }
+    .divider::after {
+        margin-left: 1rem;
+    }
 
-        .login-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: #64748b;
-        }
-
-        .login-link a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .login-link a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 480px) {
-            .registration-card {
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            input, button {
-                padding: 0.75rem;
-            }
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-            margin-top: 8px;
-        }
-
-        .form-control::placeholder {
-            color: #95a5a6;
-        }
-
-        .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-            outline: none;
-        }
-
-        .link {
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .link:hover {
-            text-decoration: underline;
-        }
-
-        .error {
-            background: #fee;
-            color: var(--danger-color);
-            padding: 1rem;
-            border-radius: 6px;
-            margin: 1rem auto;
-            max-width: 400px;
-            border: 1px solid var(--danger-color);
-        }
-
-        .w-100 {
-            width: 100%;
-        }
-    </style>
-
+    .logo {
+        color: var(--text);
+        text-align: center;
+    }
+</style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const phoneInput = document.getElementById('phone');

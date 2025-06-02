@@ -42,197 +42,208 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Форма Заявления</title>
 
     <style>
-        :root {
-            --primary: #2c3e50;     /* Темно-синий */
-            --secondary: #3498db;   /* Голубой */
-            --background: #f8f9fa;  /* Светлый фон */
-            --text: #2d3436;        /* Основной текст */
-            --border: #ced4da;      /* Границы */
-        }
+        /* Основные стили (дополнение к существующим) */
+:root {
+    --primary-blue: #2563eb;
+    --primary-dark-blue: #1e40af;
+    --danger-red: #dc2626;
+    --success-green: #16a34a;
+    --warning-orange: #ea580c;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-700: #374151;
+}
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-        }
+/* Улучшенные карточки нарушений */
+.violation-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid var(--primary-blue);
+}
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--background);
-        }
+.violation-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--primary-dark-blue));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s ease;
+}
 
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
+.violation-card:hover::before {
+    transform: scaleX(1);
+}
 
-        h1, h2 {
-            color: var(--primary);
-            margin-bottom: 2rem;
-        }
+/* Анимация статусов */
+.status-badge {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-        h1 {
-            font-size: 2.5rem;
-            text-align: center;
-        }
+.status-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: all 0.6s ease;
+}
 
-        h2 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-        }
+.status-badge:hover::after {
+    left: 100%;
+}
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+/* Градиенты для статусов */
+.status-new {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
 
-        label {
-            display: block;
-            color: var(--text);
-            font-size: 1rem;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
+.status-confirmed {
+    background: linear-gradient(135deg, #34d399, #10b981);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
 
-        input, textarea {
-            width: 100%;
-            padding: 0.875rem;
-            border: 2px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
+.status-rejected {
+    background: linear-gradient(135deg, #f87171, #ef4444);
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
 
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-        }
+/* Улучшенный навбар */
+.navbar {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    background: linear-gradient(135deg, #1e3a8a, #1e40af) !important;
+}
 
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
+.navbar-brand {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
 
-        button {
-            background: var(--secondary);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
+.nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
 
-        button:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-        }
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: white;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
 
-        .auth-link {
-            text-align: center;
-            margin-top: 1.5rem;
-            color: var(--text);
-        }
+.nav-link:hover::after {
+    width: 70%;
+}
 
-        .auth-link a {
-            color: var(--secondary);
-            text-decoration: none;
-            font-weight: 500;
-        }
+/* Анимация для контейнера */
+.container {
+    animation: fadeInUp 0.5s ease-out;
+}
 
-        .auth-link a:hover {
-            text-decoration: underline;
-        }
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        @media (max-width: 768px) {
-            .container {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 2rem;
-            }
-            
-            h2 {
-                font-size: 1.5rem;
-            }
-        }
+/* Улучшенные формы */
+.form-control {
+    transition: all 0.3s ease;
+    border: 1px solid var(--gray-200);
+}
 
+.form-control:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
 
+/* Кнопки с градиентом */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue), var(--primary-dark-blue));
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(37, 99, 235, 0.1);
+}
 
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(37, 99, 235, 0.15);
+}
 
-        .error {
-            background: #fee;
-            color: #e74c3c;
-            padding: 1rem;
-            border-radius: 6px;
-            margin: 1rem 0;
-            border: 1px solid #e74c3c;
-        }
+/* Адаптивные улучшения */
+@media (max-width: 768px) {
+    .violation-card {
+        padding: 1.5rem;
+    }
+    
+    .status-badge {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+    }
+}
 
-        .registration-card {
-            margin: 2rem auto;
-        }
+/* Индикатор загрузки (для AJAX операций) */
+.loading-indicator {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-blue), var(--success-green), var(--danger-red));
+    z-index: 9999;
+    animation: loading 1.5s infinite;
+}
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+@keyframes loading {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
 
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
+/* Микро-интеракции */
+[data-bs-toggle="tooltip"] {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
-        .form-control:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-            outline: none;
-        }
+/* Кастомный скроллбар */
+::-webkit-scrollbar {
+    width: 8px;
+}
 
-        .btn-primary {
-            background-color: #3498db;
-            padding: 1rem;
-            font-size: 1rem;
-        }
+::-webkit-scrollbar-track {
+    background: var(--gray-100);
+}
 
-        .btn-primary:hover {
-            background-color: #2980b9;
-        }
+::-webkit-scrollbar-thumb {
+    background: var(--primary-blue);
+    border-radius: 4px;
+}
 
-        .text-center {
-            text-align: center;
-        }
-
-        .mb-2 {
-            margin-bottom: 2rem;
-        }
-
-        .w-100 {
-            width: 100%;
-        }
-
-        .logo {
-            color: var(--text);
-            text-align: center;
-        }
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark-blue);
+}
     </style>
 
 </head>
