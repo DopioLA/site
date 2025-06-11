@@ -1,0 +1,316 @@
+   :root {
+        /* Цветовая палитра */
+        --primary: #2563eb;
+        --primary-hover: #1d4ed8;
+        --primary-light: #dbeafe;
+        --background: #f8fafc;
+        --surface: #ffffff;
+        --text: #1e293b;
+        --text-secondary: #64748b;
+        --border: #cbd5e1;
+        --border-hover: #94a3b8;
+        --error: #dc2626;
+        --success: #16a34a;
+        --warning: #f59e0b;
+        
+        /* Тени */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        
+        /* Радиусы */
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 1rem;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    body {
+        min-height: 100vh;
+        background-color: var(--background);
+        color: var(--text);
+        line-height: 1.5;
+    }
+
+    /* Навигационная панель */
+    .navbar {
+        background: var(--primary) !important;
+        box-shadow: var(--shadow-md);
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-brand {
+        font-weight: 600;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .navbar-brand img {
+        border: 2px solid rgba(255,255,255,0.2);
+    }
+
+    .nav-link {
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-sm);
+        transition: all 0.2s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+        background: rgba(255,255,255,0.15);
+    }
+
+    /* Основной контейнер */
+    .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+
+    /* Карточки */
+    .card, .registration-card, .auth-card, .violation-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .card:hover, .registration-card:hover, 
+    .auth-card:hover, .violation-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+    }
+
+    .violation-card {
+        border-left: 4px solid var(--primary);
+    }
+
+    /* Заголовки */
+    h1, h2, h3, h4, h5, h6 {
+        color: var(--text);
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+
+    h1 {
+        font-size: 2rem;
+        line-height: 1.2;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+    }
+
+    /* Формы */
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    label {
+        display: block;
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    input, textarea, select, .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-md);
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background-color: var(--surface);
+    }
+
+    input:focus, textarea:focus, select:focus, 
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    /* Кнопки */
+    button, .btn, .registration-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
+        border-radius: var(--radius-md);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: none;
+    }
+
+    .btn-primary, button[type="submit"] {
+        background: linear-gradient(to right, var(--primary), var(--primary-hover));
+        color: white;
+    }
+
+    .btn-primary:hover, button[type="submit"]:hover {
+        background: linear-gradient(to right, var(--primary-hover), #1e40af);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .btn-danger {
+        background: var(--error);
+        color: white;
+    }
+
+    /* Статусы */
+    .status-badge {
+        padding: 0.375rem 0.875rem;
+        border-radius: 1.5rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .status-badge::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.8);
+    }
+
+    .status-new {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        color: white;
+    }
+
+    .status-confirmed {
+        background: linear-gradient(135deg, #34d399, #10b981);
+        color: white;
+    }
+
+    .status-rejected {
+        background: linear-gradient(135deg, #f87171, #ef4444);
+        color: white;
+    }
+
+    /* Таблицы */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+    }
+
+    th, td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+
+    th {
+        background: var(--primary);
+        color: white;
+        font-weight: 500;
+    }
+
+    tr:hover {
+        background: rgba(0,0,0,0.02);
+    }
+
+    /* Сообщения */
+    .alert, .error {
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .alert-danger, .error {
+        background: rgba(220, 38, 38, 0.1);
+        border: 1px solid rgba(220, 38, 38, 0.2);
+        color: var(--error);
+    }
+
+    .alert-success {
+        background: rgba(22, 163, 74, 0.1);
+        border: 1px solid rgba(22, 163, 74, 0.2);
+        color: var(--success);
+    }
+
+    .alert-info {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        color: var(--primary);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 1rem;
+        }
+        
+        h1 {
+            font-size: 1.75rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+        
+        .card, .registration-card, .auth-card {
+            padding: 1.5rem;
+        }
+    }
+
+    /* Утилиты */
+    .text-center {
+        text-align: center;
+    }
+    
+    .mt-2 {
+        margin-top: 0.5rem;
+    }
+    
+    .mt-4 {
+        margin-top: 1rem;
+    }
+    
+    .mb-4 {
+        margin-bottom: 1rem;
+    }
+    
+    .w-100 {
+        width: 100%;
+    }
+    
+    .d-flex {
+        display: flex;
+    }
+    
+    .justify-content-between {
+        justify-content: space-between;
+    }
+    
+    .align-items-center {
+        align-items: center;
+    }
