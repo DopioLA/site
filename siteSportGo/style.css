@@ -464,3 +464,19 @@ select:focus {
         flex-direction: column;
     }
 }
+
+.invalid {
+    border-color: #ff0000 !important;
+    box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25) !important;
+}
+
+.error-message {
+    color: #ff0000;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
+}
+
+.invalid + .error-message {
+    display: block;
+}

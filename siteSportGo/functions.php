@@ -15,7 +15,16 @@ function check_admin() {
 }
 
 function validate_phone($phone) {
-    return preg_match('/^\+7\d{10}$/', $phone);
+    // Удаляем все символы, кроме цифр и плюса
+    $cleaned = preg_replace('/[^\d+]/', '', $phone);
+    
+    // Проверяем российские номера:
+    // +7XXXXXXXXXX (11 цифр) или 8XXXXXXXXXX (11 цифр)
+    if (preg_match('/^(\+7|8)\d{10}$/', $cleaned)) {
+        return true;
+    }
+    
+    return false;
 }
 
 function validate_email($email) {

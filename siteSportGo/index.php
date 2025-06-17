@@ -190,34 +190,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-        const phoneInput = document.getElementById('phone');
-            
-            phoneInput.addEventListener('input', function(e) {
-                let number = e.target.value.replace(/\D/g, '');
-                
-                
-                if(number.startsWith('8') && number.length > 1) {
-                    number = '7' + number.substring(1);
-                }
-                
-               
-                let formatted = '+7';
-                if(number.length > 1) {
-                    formatted += ' (' + number.substring(1, 4);
-                }
-                if(number.length >= 5) {
-                    formatted += ') ' + number.substring(4, 7);
-                }
-                if(number.length >= 8) {
-                    formatted += '-' + number.substring(7, 9);
-                }
-                if(number.length >= 10) {
-                    formatted += '-' + number.substring(9, 11);
-                }
-                
-                
-                e.target.value = formatted;
-            });
+    const phoneInput = document.getElementById('phone');
+    
+    phoneInput.addEventListener('input', function(e) {
+        // Сохраняем позицию курсора
+        const cursorPosition = e.target.selectionStart;
+        
+        // Удаляем все нецифровые символы, кроме плюса
+        let numbers = e.target.value.replace(/[^\d+]/g, '');
+        
+        // Если номер начинается с 8, заменяем на +7
+        if (numbers.startsWith('8')) {
+            numbers = '+7' + numbers.substring(1);
+        }
+        // Если номер не начинается с +7, добавляем +7
+        else if (!numbers.startsWith('+7') && numbers.length > 0) {
+            numbers = '+7' + numbers;
+        }
+        
+        // Форматируем номер
+        let formatted = '';
+        if (numbers.length > 2) {
+            formatted = numbers.substring(0, 2) + ' (' + numbers.substring(2, 5);
+        }
+        if (numbers.length > 5) {
+            formatted += ') ' + numbers.substring(5, 8);
+        }
+        if (numbers.length > 8) {
+            formatted += '-' + numbers.substring(8, 10);
+        }
+        if (numbers.length > 10) {
+            formatted += '-' + numbers.substring(10, 12);
+        }
+        
+        // Обновляем значение
+        e.target.value = formatted;
+        
+        // Восстанавливаем позицию курсора
+        const newCursorPosition = cursorPosition + (e.target.value.length - formatted.length);
+        e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+    });
+
+    phoneInput.addEventListener('blur', function(e) {
+        // Проверяем валидность при потере фокуса
+        const phone = e.target.value;
+        const isValid = /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/.test(phone);
+        
+        if (!isValid) {
+            e.target.classList.add('invalid');
+            // Можно добавить отображение ошибки
+        } else {
+            e.target.classList.remove('invalid');
+        }
+    });
+});
 
            
             phoneInput.addEventListener('change', function(e) {
