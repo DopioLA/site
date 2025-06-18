@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: MySQL-8.0
--- Время создания: Июн 16 2025 г., 12:19
--- Версия сервера: 8.0.35
--- Версия PHP: 8.1.28
+-- Время создания: Июн 18 2025 г., 15:21
+-- Версия сервера: 8.0.41
+-- Версия PHP: 8.1.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -60,7 +60,7 @@ CREATE TABLE `equipment` (
 --
 
 INSERT INTO `equipment` (`equipment_id`, `name`, `type`, `price_per_hour`, `available_quantity`, `description`) VALUES
-(1, 'Горный велосипед', 'Велосипед', 350.00, 4, 'Качественный горный велосипед для сложных трасс'),
+(1, 'Горный велосипед', 'Велосипед', 350.00, 10, 'Качественный горный велосипед для сложных трасс'),
 (2, 'Роликовые коньки', 'Ролики', 200.00, 8, 'Размеры: 38-45, регулируемые'),
 (3, 'Туристическая палатка', 'Туризм', 500.00, 3, '4-местная, водонепроницаемая');
 
@@ -80,6 +80,7 @@ CREATE TABLE `orders` (
   `total_price` decimal(10,2) NOT NULL,
   `payment_method` enum('cash','card') NOT NULL,
   `status` enum('new','confirmed','completed','cancelled') DEFAULT 'new',
+  `cancellation_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'Причина отмены заказа',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -87,8 +88,9 @@ CREATE TABLE `orders` (
 -- Дамп данных таблицы `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `user_id`, `equipment_id`, `point_id`, `start_time`, `end_time`, `total_price`, `payment_method`, `status`, `created_at`) VALUES
-(1, 6, 1, 1, '2025-06-16 13:12:00', '2025-06-16 13:14:00', 11.67, 'cash', 'confirmed', '2025-06-16 11:11:56');
+INSERT INTO `orders` (`order_id`, `user_id`, `equipment_id`, `point_id`, `start_time`, `end_time`, `total_price`, `payment_method`, `status`, `cancellation_reason`, `created_at`) VALUES
+(1, 6, 1, 1, '2025-06-16 13:12:00', '2025-06-16 13:14:00', 11.67, 'cash', 'cancelled', 'Потому что', '2025-06-16 11:11:56'),
+(2, 7, 1, 1, '2025-06-18 19:04:00', '2025-06-28 15:09:00', 82629.17, 'cash', 'cancelled', 'потому что', '2025-06-18 10:04:32');
 
 -- --------------------------------------------------------
 
@@ -130,7 +132,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `full_name`, `phone`, `email`, `login`, `password`, `registration_date`) VALUES
-(6, 'Миша Миша Миша', '+78888888888', 'df@yandex.ru', 'qaz', '$2y$10$BJ6IJ9SV3wS0So1IhEIJFeWmaomepmmIKNQYxfZxxByyQDcsADswG', '2025-06-16 10:49:50');
+(6, 'Миша Миша Миша', '+78888888888', 'df@yandex.ru', 'qaz', '$2y$10$BJ6IJ9SV3wS0So1IhEIJFeWmaomepmmIKNQYxfZxxByyQDcsADswG', '2025-06-16 10:49:50'),
+(7, 'Катя Ваняшева фывфыв', '+7 (903) 354-20-89', 'asagitova335@gmail.com', 'DopioLA', '$2y$10$7YGS9VVfwZMU.1Xybd5BQ.CtTZMx1AmjIz42F.JF1ADfGlycLWuHK', '2025-06-17 13:57:08');
 
 --
 -- Индексы сохранённых таблиц
@@ -192,7 +195,7 @@ ALTER TABLE `equipment`
 -- AUTO_INCREMENT для таблицы `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `order_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `order_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `pickup_points`
@@ -204,7 +207,7 @@ ALTER TABLE `pickup_points`
 -- AUTO_INCREMENT для таблицы `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `user_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
