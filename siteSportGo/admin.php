@@ -9,11 +9,11 @@ $orders = get_all_orders($pdo);
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
     $order_id = (int)$_POST['order_id'];
     $new_status = $_POST['new_status'];
+    $cancellation_reason = ($new_status === 'cancelled') ? trim($_POST['cancellation_reason']) : null;
     
-    $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE order_id = ?");
-    $stmt->execute([$new_status, $order_id]);
+    $stmt = $pdo->prepare("UPDATE orders SET status = ?, cancellation_reason = ? WHERE order_id = ?");
+    $stmt->execute([$new_status, $cancellation_reason, $order_id]);
     
-    // Если статус изменен на "cancelled" или "completed", возвращаем инвентарь
     if ($new_status === 'cancelled' || $new_status === 'completed') {
         $stmt = $pdo->prepare("
             UPDATE equipment e
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
         <div class="sports-bg">
             <header>
                 <h1 class="header-title">Панель администратора</h1>
-                <a href="logout.php" class="logout-btn">
+                <a href="logout.php" class="btn logout-btn">
                     <i class="fas fa-sign-out-alt"></i> Выйти
                 </a>
             </header>
@@ -91,19 +91,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
                                     ];
                                     echo $statuses[$order['status']];
                                     ?>
+                                    <?php if ($order['status'] === 'cancelled' && !empty($order['cancellation_reason'])): ?>
+                                        <br><small>Причина: <?= htmlspecialchars($order['cancellation_reason']) ?></small>
+                                    <?php endif; ?>
                                 </span>
                             </td>
                             <td data-label="Действия">
-                                <form class="status-form" method="POST">
+                                <form method="POST" class="status-form">
                                     <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
-                                    <select name="new_status" class="status-select">
+                                    <select name="new_status" class="status-select" onchange="toggleCancelReason(this, <?= $order['order_id'] ?>)">
                                         <option value="new" <?= $order['status'] === 'new' ? 'selected' : '' ?>>Новый</option>
                                         <option value="confirmed" <?= $order['status'] === 'confirmed' ? 'selected' : '' ?>>Подтвержден</option>
                                         <option value="completed" <?= $order['status'] === 'completed' ? 'selected' : '' ?>>Выполнен</option>
                                         <option value="cancelled" <?= $order['status'] === 'cancelled' ? 'selected' : '' ?>>Отменен</option>
                                     </select>
+                                    <div id="cancel-reason-<?= $order['order_id'] ?>" class="cancel-reason" style="display: <?= $order['status'] === 'cancelled' ? 'block' : 'none' ?>;">
+                                        <textarea name="cancellation_reason" placeholder="Укажите причину отмены" class="form-control"><?= htmlspecialchars($order['cancellation_reason'] ?? '') ?></textarea>
+                                    </div>
                                     <button type="submit" name="update_status" class="update-btn">
-                                        <i class="fas fa-sync-alt"></i>
+                                        <i class="fas fa-sync-alt"></i> Обновить
                                     </button>
                                 </form>
                             </td>
@@ -121,5 +127,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
             </div>
         </div>
     </div>
+
+    <script>
+        function toggleCancelReason(select, orderId) {
+            const reasonField = document.getElementById(`cancel-reason-${orderId}`);
+            if (select.value === 'cancelled') {
+                reasonField.style.display = 'block';
+            } else {
+                reasonField.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

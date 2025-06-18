@@ -15,7 +15,7 @@ $orders = get_user_orders($_SESSION['user_id'], $pdo);
     <title>Личный кабинет | СпортGo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -66,6 +66,11 @@ $orders = get_user_orders($_SESSION['user_id'], $pdo);
                                         echo $statuses[$order['status']];
                                         ?>
                                     </span>
+                                    <?php if ($order['status'] == 'cancelled' && !empty($order['cancellation_reason'])): ?>
+                                        <div class="cancellation-reason">
+                                            <strong>Причина:</strong> <?= htmlspecialchars($order['cancellation_reason']) ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -76,7 +81,7 @@ $orders = get_user_orders($_SESSION['user_id'], $pdo);
                     <p><i class="fas fa-shopping-cart fa-2x"></i></p>
                     <p>У вас пока нет заказов</p>
                     <a href="create_order.php" class="create-order-btn">
-                        <i class="fas fa-plus"></i> Оформить первый заказ
+                        </i> Оформить первый заказ
                     </a>
                 </div>
             <?php endif; ?>

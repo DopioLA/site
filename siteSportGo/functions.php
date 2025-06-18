@@ -66,4 +66,5 @@ function get_css_path() {
     // Добавляем параметр версии для борьбы с кэшированием
     return $css_path . '?v=' . filemtime($css_path);
 }
+
 ?>

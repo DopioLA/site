@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 
-                <button type="submit">Зарегистрироваться</button>
+                <button class="btn" type="submit">Зарегистрироваться</button>
             </form>
             
             <div class="login-link">

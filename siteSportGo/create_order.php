@@ -135,7 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
                 
-                <button type="submit">
+                <button class="btn" type="submit">
                     <i class="fas fa-check-circle"></i> Подтвердить заказ
                 </button>
             </form>
